@@ -11,13 +11,13 @@
   <!-- Navigation Bar -->
   <nav class="navbar">
     <div class="container nav-container">
-      <div class="logo">🛒 Smart Grocery Planner</div>
+      <div class="logo"><img src="assests/logo.jpg" alt="Smart Grocery Logo" class="logo-img" /> Smart Grocery Planner</div>
       <div class="hamburger" onclick="toggleMenu()">&#9776;</div>
       <ul class="nav-links" id="navLinks">
-        <li><a href="index.html" class="active">Home</a></li>
+        <li><a href="index.html" >Home</a></li>
         <li><a href="grocery.html">Grocery</a></li>
         <li><a href="budget.html">Budget</a></li>
-        <li><a href="mealplanner.html">Meal Planner</a></li>
+        <li><a href="mealplanner.html"class="active">Meal Planner</a></li>
       </ul>
     </div>
   </nav>
@@ -143,68 +143,74 @@
   </main>
   
   <main class="container">
-    <section class="form-section">
-      <h2>Meal Planner</h2>
-      <p>This tool will help you plan meals using the groceries you’ve added.</p>
+  <section class="form-section">
+    <h2>Meal Planner</h2>
+    <p>This tool will help you plan meals using the groceries you’ve added.</p>
 
-      <h2>Weekly Meal Planner</h2>
+    <h2>Weekly Meal Planner</h2>
 
-  <table border="1" id="mealTable">
-    <thead>
-      <tr>
-        <th>Day</th>
-        <th>Meal</th>
-        <th>Suggested Ingredients</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Monday</td>
-        <td><input type="text" placeholder="Enter meal name"></td>
-        <td><input type="text" placeholder="Enter ingredients"></td>
-      </tr>
-      <tr>
-        <td>Tuesday</td>
-        <td><input type="text" placeholder="Enter meal name"></td>
-        <td><input type="text" placeholder="Enter ingredients"></td>
-      </tr>
-      <tr>
-        <td>Wednesday</td>
-        <td><input type="text" placeholder="Enter meal name"></td>
-        <td><input type="text" placeholder="Enter ingredients"></td>
-      </tr>
-      <tr>
-        <td>Thursday</td>
-        <td><input type="text" placeholder="Enter meal name"></td>
-        <td><input type="text" placeholder="Enter ingredients"></td>
-      </tr>
-      <tr>
-        <td>Friday</td>
-        <td><input type="text" placeholder="Enter meal name"></td>
-        <td><input type="text" placeholder="Enter ingredients"></td>
-      </tr>
-      <tr>
-        <td>Saturday</td>
-        <td><input type="text" placeholder="Enter meal name"></td>
-        <td><input type="text" placeholder="Enter ingredients"></td>
-      </tr>
-      <tr>
-        <td>Sunday</td>
-        <td><input type="text" placeholder="Enter meal name"></td>
-        <td><input type="text" placeholder="Enter ingredients"></td>
-      </tr>
-    </tbody>
-  </table>
-   <br>
-  <button type="submit" class="submit-btn" onclick="saveMeals()">Save Plan</button>
-</section>
+    <table border="1" id="mealTable">
+      <thead>
+        <tr>
+          <th>Day</th>
+          <th>Meal</th>
+          <th>Suggested Ingredients</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td data-label="Day">Monday</td>
+          <td data-label="Meal"><input type="text" placeholder="Enter meal name" /></td>
+          <td data-label="Suggested Ingredients"><input type="text" placeholder="Enter ingredients" /></td>
+        </tr>
+        <tr>
+          <td data-label="Day">Tuesday</td>
+          <td data-label="Meal"><input type="text" placeholder="Enter meal name" /></td>
+          <td data-label="Suggested Ingredients"><input type="text" placeholder="Enter ingredients" /></td>
+        </tr>
+        <tr>
+          <td data-label="Day">Wednesday</td>
+          <td data-label="Meal"><input type="text" placeholder="Enter meal name" /></td>
+          <td data-label="Suggested Ingredients"><input type="text" placeholder="Enter ingredients" /></td>
+        </tr>
+        <tr>
+          <td data-label="Day">Thursday</td>
+          <td data-label="Meal"><input type="text" placeholder="Enter meal name" /></td>
+          <td data-label="Suggested Ingredients"><input type="text" placeholder="Enter ingredients" /></td>
+        </tr>
+        <tr>
+          <td data-label="Day">Friday</td>
+          <td data-label="Meal"><input type="text" placeholder="Enter meal name" /></td>
+          <td data-label="Suggested Ingredients"><input type="text" placeholder="Enter ingredients" /></td>
+        </tr>
+        <tr>
+          <td data-label="Day">Saturday</td>
+          <td data-label="Meal"><input type="text" placeholder="Enter meal name" /></td>
+          <td data-label="Suggested Ingredients"><input type="text" placeholder="Enter ingredients" /></td>
+        </tr>
+        <tr>
+          <td data-label="Day">Sunday</td>
+          <td data-label="Meal"><input type="text" placeholder="Enter meal name" /></td>
+          <td data-label="Suggested Ingredients"><input type="text" placeholder="Enter ingredients" /></td>
+        </tr>
+      </tbody>
+    </table>
 
-    <hr>
-<h3>Saved Meal Plans</h3>
-<div id="savedMeals"></div>
+    <br />
+    <button type="submit" class="submit-btn" onclick="saveMeals()">Save Plan</button>
+  </section>
 
-  </main>
+  <hr />
+  <h3>Saved Meal Plans</h3>
+  <div id="savedMeals"></div>
+</main>
+
   <script>
+  function toggleMenu() {
+      const navLinks = document.getElementById("navLinks");
+      navLinks.classList.toggle("show");
+    }
+
   // Load existing meals into the form when page loads
   function loadMealsIntoForm() {
     const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];

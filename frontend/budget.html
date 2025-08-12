@@ -11,7 +11,10 @@
   <!-- Navigation Bar -->
   <nav class="navbar">
     <div class="container nav-container">
-      <div class="logo">🛒 Smart Grocery Planner</div>
+      <div class="logo">
+        <img src="assests/logo.jpg" alt="Smart Grocery Logo" class="logo-img" />
+        Smart Grocery Planner
+      </div>
       <div class="hamburger" onclick="toggleMenu()">&#9776;</div>
       <ul class="nav-links" id="navLinks">
         <li><a href="index.html">Home</a></li>
@@ -23,8 +26,9 @@
   </nav>
 
   <main class="container">
+    <!-- 💸 Budget Form -->
     <section class="form-section">
-      <h2>Budget Planner</h2>
+      <h2>💸 Monthly Budget Planner</h2>
       <form id="budget-form">
         <div class="form-group">
           <label for="monthlyBudget">Monthly Budget ($):</label>
@@ -50,23 +54,25 @@
         </div>
         <div class="form-group">
           <label for="year">Year:</label>
-          <input type="number" id="year" min="2020" max="2030" required />
+          <input type="number" id="year" min="2025" max="2050" required />
         </div>
         <button type="submit" class="submit-btn">Set Budget</button>
       </form>
       <div id="budget-summary" class="status-message"></div>
     </section>
 
+    <!-- 📊 Budget Display -->
     <section class="form-section">
-      <h3>Current Budget Status</h3>
+      <h3>📊 Current Budget Status</h3>
       <div id="budget-display">
         <p>Loading budget information...</p>
       </div>
-      <button onclick="loadCurrentBudget()" class="submit-btn" style="width: auto; padding: 8px 16px; margin-top: 10px;">Refresh</button>
+      <button onclick="loadCurrentBudget()" class="submit-btn">Refresh</button>
     </section>
 
+    <!-- ➕ Add Expense -->
     <section class="form-section">
-      <h3>Add Expense</h3>
+      <h3>➕ Add Expense</h3>
       <form id="expense-form">
         <div class="form-group">
           <label for="expenseAmount">Amount Spent ($):</label>
@@ -78,27 +84,62 @@
     </section>
   </main>
 
-  <!-- All JavaScript -->
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-content">
+      <p>&copy; 2025 Smart Grocery Planner. All rights reserved.</p>
+      <ul class="footer-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="grocery.html">Grocery</a></li>
+        <li><a href="budget.html">Budget</a></li>
+        <li><a href="mealplanner.html">Meal Planner</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
   <script>
-    // Toggle Menu for Mobile
     function toggleMenu() {
       const navLinks = document.getElementById("navLinks");
       navLinks.classList.toggle("show");
     }
 
-    // Set current month and year by default
     document.addEventListener('DOMContentLoaded', function () {
-      const currentDate = new Date();
-      const currentMonth = currentDate.toLocaleString('default', { month: 'long' });
-      const currentYear = currentDate.getFullYear();
+  const currentDate = new Date();
+  const currentMonthIndex = currentDate.getMonth(); // 0-based (0 = Jan)
+  const currentYear = currentDate.getFullYear();
 
-      document.getElementById('month').value = currentMonth;
-      document.getElementById('year').value = currentYear;
+  const monthSelect = document.getElementById("month");
+  const yearInput = document.getElementById("year");
 
-      loadCurrentBudget();
-    });
+  // Pre-fill year and month
+  yearInput.value = currentYear;
+  monthSelect.selectedIndex = currentMonthIndex + 1;
 
-    // Handle budget form submission
+  // Disable past months if current year is selected
+  function disablePastMonths() {
+    const selectedYear = parseInt(yearInput.value);
+    const options = monthSelect.options;
+
+    for (let i = 1; i < options.length; i++) {
+      const optionMonthIndex = i - 1; // adjust for placeholder
+      if (selectedYear === currentYear && optionMonthIndex < currentMonthIndex) {
+        options[i].disabled = true;
+      } else {
+        options[i].disabled = false;
+      }
+    }
+  }
+
+  // Initial setup
+  disablePastMonths();
+  loadCurrentBudget();
+
+  // Listen for year change
+  yearInput.addEventListener("change", disablePastMonths);
+});
+
+
     document.getElementById("budget-form").addEventListener("submit", async function (e) {
       e.preventDefault();
 
@@ -125,7 +166,7 @@
         if (response.ok) {
           summary.innerText = `✅ Budget for ${month} ${year} set successfully: $${totalBudget.toFixed(2)}`;
           summary.style.color = "green";
-          loadCurrentBudget(); // Refresh the display
+          loadCurrentBudget();
         } else {
           summary.innerText = `❌ Error: ${data.error}`;
           summary.style.color = "red";
@@ -137,7 +178,6 @@
       }
     });
 
-    // Handle expense form submission
     document.getElementById("expense-form").addEventListener("submit", async function (e) {
       e.preventDefault();
 
@@ -163,7 +203,7 @@
           message.innerText = `✅ Expense of $${amount.toFixed(2)} added successfully!`;
           message.style.color = "green";
           document.getElementById("expense-form").reset();
-          loadCurrentBudget(); // Refresh the display
+          loadCurrentBudget();
         } else {
           message.innerText = `❌ Error: ${data.error}`;
           message.style.color = "red";
@@ -175,7 +215,6 @@
       }
     });
 
-    // Load current budget information
     async function loadCurrentBudget() {
       const display = document.getElementById("budget-display");
 
@@ -188,19 +227,19 @@
           const statusColor = percentageSpent > 90 ? '#d32f2f' : percentageSpent > 75 ? '#f57f17' : '#2e8b57';
 
           display.innerHTML = `
-            <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 4px solid ${statusColor};">
-              <h4 style="color: ${statusColor}; margin-bottom: 10px;">${data.month} ${data.year} Budget</h4>
-              <p><strong>Total Budget:</strong> $${data.totalBudget.toFixed(2)}</p>
-              <p><strong>Amount Spent:</strong> $${data.amountSpent.toFixed(2)}</p>
+            <div class="budget-box" style="border-left: 4px solid ${statusColor};">
+              <h4 style="color: ${statusColor};">${data.month} ${data.year} Budget</h4>
+              <p><strong>Total:</strong> $${data.totalBudget.toFixed(2)}</p>
+              <p><strong>Spent:</strong> $${data.amountSpent.toFixed(2)}</p>
               <p><strong>Remaining:</strong> $${data.remainingBudget.toFixed(2)}</p>
-              <p><strong>Percentage Used:</strong> ${percentageSpent}%</p>
-              <div style="background-color: #e0e0e0; height: 20px; border-radius: 10px; margin-top: 10px;">
-                <div style="background-color: ${statusColor}; height: 100%; width: ${Math.min(percentageSpent, 100)}%; border-radius: 10px; transition: width 0.3s ease;"></div>
+              <p><strong>Used:</strong> ${percentageSpent}%</p>
+              <div class="budget-bar">
+                <div class="budget-progress" style="width: ${Math.min(percentageSpent, 100)}%; background-color: ${statusColor};"></div>
               </div>
             </div>
           `;
         } else {
-          display.innerHTML = `<p style="color: #666;">No budget set for current month. Please set a budget above.</p>`;
+          display.innerHTML = `<p style="color: #666;">No budget set for current month.</p>`;
         }
       } catch (err) {
         display.innerHTML = `<p style="color: red;">Error loading budget information.</p>`;
@@ -208,9 +247,6 @@
       }
     }
   </script>
-
-  <!-- Optional External Script -->
-  <script src="script.js"></script>
 
 </body>
 </html>

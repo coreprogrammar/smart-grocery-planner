@@ -13,8 +13,7 @@ const BudgetSchema = new mongoose.Schema({
   },
   month: {
     type: String,
-    required: true,
-    unique: true // Only one budget per month
+    required: true
   },
   year: {
     type: Number,
@@ -27,14 +26,40 @@ const BudgetSchema = new mongoose.Schema({
   userId: String // optional, for future login
 });
 
-// Calculate remaining budget
+// ✅ Ensure uniqueness for combination of month and year
+BudgetSchema.index({ month: 1, year: 1 }, { unique: true });
+
+// ✅ Virtual: Remaining budget
 BudgetSchema.virtual('remainingBudget').get(function() {
   return this.totalBudget - this.amountSpent;
 });
 
-// Calculate percentage spent
+// ✅ Virtual: Percentage spent
 BudgetSchema.virtual('percentageSpent').get(function() {
   return this.totalBudget > 0 ? (this.amountSpent / this.totalBudget) * 100 : 0;
+});
+
+// ✅ Pre-save validation to prevent budget entries for past months of the current year
+BudgetSchema.pre('validate', function(next) {
+  const now = new Date();
+  const currentMonthIndex = now.getMonth(); // 0 = Jan
+  const currentYear = now.getFullYear();
+
+  const monthNames = [
+    'January', 'February', 'March', 'April', 'May', 'June',
+    'July', 'August', 'September', 'October', 'November', 'December'
+  ];
+
+  const selectedMonthIndex = monthNames.indexOf(this.month);
+
+  if (
+    this.year < currentYear ||
+    (this.year === currentYear && selectedMonthIndex < currentMonthIndex)
+  ) {
+    return next(new Error('Cannot set budget for a past month in the current year.'));
+  }
+
+  next();
 });
 
 module.exports = mongoose.model('Budget', BudgetSchema);
